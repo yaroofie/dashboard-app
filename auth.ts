@@ -1,9 +1,9 @@
 import NextAuth from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
+// import GoogleProvider from 'next-auth/providers/google'
 import { authConfig } from './auth.config'
 import { z } from 'zod'
 import { getUserWithUsernamePassword } from './prisma/helpers/user'
-import { hashPassword } from './utils/security';
 
 export const { auth, signIn, signOut } = NextAuth({
   ...authConfig,
@@ -16,15 +16,17 @@ export const { auth, signIn, signOut } = NextAuth({
 
         if (parsedCredentials.success) {
           const { email, password } = parsedCredentials.data
-          const hashedPassword = await hashPassword(password)
-          const user = await getUserWithUsernamePassword( email, hashedPassword )
-          
-          return user;
+          const user = await getUserWithUsernamePassword(email, password)
+          return user
         }
 
         console.log('Invalid credentials')
         return null
       }
-    })
+    }),
+    // GoogleProvider({
+    //   clientId: process.env.GOOGLE_CLIENT_ID,
+    //   clientSecret: process.env.GOOGLE_CLIENT_SECRET
+    // })
   ]
 })

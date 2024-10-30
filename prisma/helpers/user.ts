@@ -1,4 +1,5 @@
 import prisma from '@/prisma/client'
+import { hashCompare } from '@/utils/security'
 
 export const USER_PRIVATE_FIELDS = {
   id: true,
@@ -25,13 +26,17 @@ export async function getUser(email: string) {
 export async function getUserWithUsernamePassword(email: string, password: string) {
   try {
     const user = await prisma.user.findUnique({
-      omit: USER_PRIVATE_FIELDS,
       where: {
-        email,
-        password
+        email
+      },
+      select: {
+        password: true
       }
     })
-    return user
+    if (!user) return null
+    const isSame = await hashCompare(password, user.password)
+    if (!isSame) return null
+    return await getUser(email)
   } catch (error) {
     console.error('Failed to fetch user:', error)
     throw new Error('Failed to fetch user.')

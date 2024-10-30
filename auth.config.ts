@@ -9,6 +9,12 @@ export const authConfig = {
       const isLoggedIn = !!auth?.user;
       const isOnDashboard = nextUrl.pathname.startsWith('/admin');
       if ( isOnDashboard && !isLoggedIn ) return false;
+
+      const isOnLogin = nextUrl.pathname.startsWith('/login')
+      if ( isLoggedIn && isOnLogin )
+      {
+        return false;
+      }
       return true;
     },
   },
