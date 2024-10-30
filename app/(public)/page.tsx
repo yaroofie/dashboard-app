@@ -1,9 +1,14 @@
 import Image from 'next/image';
-import { lusitana } from '@/app/ui/fonts';
-import AcmeLogo from '@/app/ui/acme-logo';
-import CTAButton from '@/app/ui/landing/cta-button';
+import { lusitana } from '@/ui/fonts';
+import AcmeLogo from '@/ui/acme-logo';
+import CTAButton from '@/ui/landing/cta-button';
+import prisma from '@/lib/db';
 
-export default async function Page() {
+export default async function Page ()
+{
+  const users = await prisma.user.findMany();
+  console.log( users );
+
   return (
     <main className="flex min-h-screen flex-col p-6">
       <div className="flex h-20 shrink-0 items-end rounded-lg bg-blue-500 p-4 md:h-52">
