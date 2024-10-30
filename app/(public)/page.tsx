@@ -2,12 +2,12 @@ import Image from 'next/image';
 import { lusitana } from '@/ui/fonts';
 import AcmeLogo from '@/ui/acme-logo';
 import CTAButton from '@/ui/landing/cta-button';
-import prisma from '@/lib/db';
+import { auth } from "@/auth"
 
 export default async function Page ()
 {
-  const users = await prisma.user.findMany();
-  console.log( users );
+  const session = await auth()
+  console.log( session );
 
   return (
     <main className="flex min-h-screen flex-col p-6">
